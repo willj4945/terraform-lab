@@ -5,8 +5,8 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"  # where to download it from
-      version = "~> 5.0"          # "5.x, but not 6.0" — pessimistic operator
+      source  = "hashicorp/aws" # where to download it from
+      version = "~> 5.0"        # "5.x, but not 6.0" — pessimistic operator
     }
   }
 }
@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "audit_logs" {
     Environment = "lab"
     ManagedBy   = "terraform"
   }
-  
+
 }
 
 resource "aws_s3_bucket_public_access_block" "audit_logs" {
@@ -45,7 +45,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "audit_logs" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"  # SSE-S3. KMS comes in Milestone 2.
+      sse_algorithm = "AES256" # SSE-S3. KMS comes in Milestone 2.
     }
   }
 }
