@@ -16,23 +16,23 @@ terraform {
 # cached SSO token. Never put keys in this block.
 provider "aws" {
   region = "us-east-1"
-}
-
-# ── The bucket ────────────────────────────────────────────────────
-resource "aws_s3_bucket" "audit_logs" {
-  bucket = "audit-logs-lab-s3-0001"
-
-  tags = {
-    Name        = "audit-logs-lab"
-    Environment = "lab"
-    ManagedBy   = "terraform"
+  default_tags {
+    tags = {
+      Environment = "lab"
+      ManagedBy   = "terraform"
+      Project     = "terraform-lab"
+    }
   }
+}
+# ── The bucket ────────────────────────────────────────────────────
+resource "aws_s3_bucket" "audit_bucket" {
+  bucket = "audit-logs-lab-788356290651" # must be globally unique
 
 }
 
-resource "aws_s3_bucket_public_access_block" "audit_logs" {
+resource "aws_s3_bucket_public_access_block" "audit_bucket" {
   # Reference, not a string. This is what creates the dependency graph.
-  bucket = aws_s3_bucket.audit_logs.id
+  bucket = aws_s3_bucket.audit_bucket.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -40,8 +40,8 @@ resource "aws_s3_bucket_public_access_block" "audit_logs" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "audit_logs" {
-  bucket = aws_s3_bucket.audit_logs.id
+resource "aws_s3_bucket_server_side_encryption_configuration" "audit_bucket" {
+  bucket = aws_s3_bucket.audit_bucket.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -50,8 +50,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "audit_logs" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "audit_logs" {
-  bucket = aws_s3_bucket.audit_logs.id
+resource "aws_s3_bucket_versioning" "audit_bucket" {
+  bucket = aws_s3_bucket.audit_bucket.id
 
   versioning_configuration {
     status = "Enabled"
